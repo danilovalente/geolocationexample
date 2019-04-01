@@ -1,0 +1,163 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a Geolocation API"
+  version: "1.0.0"
+  title: "Geolocation API"
+  contact:
+    email: "dev@rakuten.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/rakuten.de/geolocation-api/1.0.0"
+tags:
+- name: "admins"
+  description: "Secured Admin-only calls"
+- name: "developers"
+  description: "Operations available to regular developers"
+schemes:
+- "https"
+paths:
+  '/transport/{transportId}/position':
+    put:
+      summary: "updates a transport position"
+      description: "Updates coordinates"
+      operationId: "updatePosition"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "transportId"
+        in: "path"
+        description: "Transport unique identifier\n"
+        required: true
+        type: "string"
+        x-exportParamName: "TransportId"
+      - in: "body"
+        name: "Position"
+        description: "New transport position"
+        required: false
+        schema:
+          $ref: "#/definitions/Position"
+        x-exportParamName: "Position"
+      responses:
+        200:
+          description: "Position updated"
+        400:
+          description: "Bad input parameter"
+  '/transport/{id}':
+    get:
+      summary: "Gets a transport by id"
+      description: "Gets a transport by id"
+      operationId: "getTransportById"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Transport unique identifier\n"
+        required: true
+        type: "string"
+        x-exportParamName: "TransportId"
+      responses:
+        200:
+          description: "Position found"
+        400:
+          description: "Bad input parameter"
+        404:
+          description: "Position NOT Found"
+  /transport:
+    get:
+      summary: get transports
+      operationId: getTransport
+      description: |
+        Returns the
+        available transport in the system
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Transports found
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transport'
+        400:
+          description: bad input parameter
+    post:
+      tags:
+      - "admins"
+      summary: "adds a Transport"
+      description: "Adds an item to the system"
+      operationId: "addTransport"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "transport"
+        description: "Transport item to add"
+        required: false
+        schema:
+          $ref: "#/definitions/Transport"
+        x-exportParamName: "Transport"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+definitions:
+  Transport:
+    type: "object"
+    required:
+    - "currentPosition"
+    - "description"
+    - "id"
+    properties:
+      id:
+        type: "string"
+        example: "D-BA-RA-0001"
+      description:
+        type: "string"
+        example: "Truck"
+      category:
+        type: "string"
+        enum:
+        - "Truck"
+        - "Van"
+        - "Drone"
+      lastPositionReportedAt:
+        type: "string"
+        format: "date-time"
+        example: "2016-08-29T09:12:33.001Z"
+      currentPosition:
+        $ref: "#/definitions/Position"
+    example:
+      currentPosition:
+        lng: 10.9206611
+        lat: 49.8897949
+      description: "Truck"
+      id: "D-BA-RA-0001"
+      category: "Truck"
+      lastPositionReportedAt: "2016-08-29T09:12:33.001Z"
+  Position:
+    required:
+    - "lat"
+    - "lng"
+    properties:
+      lat:
+        type: "number"
+        example: 49.8897949
+      lng:
+        type: "number"
+        example: 10.9206611
+    example:
+      lng: 10.9206611
+      lat: 49.8897949
