@@ -138,6 +138,14 @@
   version = "v1.7.0"
 
 [[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   digest = "1:4cbbca3db0ff89197d000fb2fa0b90ca4516a7fbd4d8cd9fa4bebf17df484f6d"
   name = "github.com/grpc-ecosystem/grpc-gateway"
   packages = [
@@ -196,17 +204,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "73f8eece6fdcd902c185bf651de50f3828bed5ed"
-
-[[projects]]
-  digest = "1:ba2b02a12edf58a634ac094c5e4b0f994a5342ff3f01325a04e9c05a34d2df92"
-  name = "gitlab.rktn.de/data-processing/service_product"
-  packages = [
-    "config",
-    "utils",
-  ]
-  pruneopts = "UT"
-  revision = "734e766522523b12df3479eec5b0c82a28bf6c7c"
-  version = "v2.0.1"
 
 [[projects]]
   digest = "1:21f9cb6f1337c4776ed1d2d7b7ed6ffba3269ca12274c065364a5c0edee1f28b"
@@ -417,8 +414,10 @@
     "github.com/Azure/azure-amqp-common-go/aad",
     "github.com/Azure/azure-event-hubs-go",
     "github.com/gorilla/mux",
-    "gitlab.rktn.de/data-processing/service_product/utils",
+    "github.com/gorilla/websocket",
+    "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/mongo",
+    "go.mongodb.org/mongo-driver/mongo/options",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

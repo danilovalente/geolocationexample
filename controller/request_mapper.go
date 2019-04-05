@@ -12,5 +12,7 @@ func MapHandlers() (*mux.Router, error) {
 	context.Methods("GET").Path("/transport/{id}").HandlerFunc(getTransport)
 	context.Methods("GET").Path("/transport").HandlerFunc(getTransports)
 	context.Methods("POST").Path("/transport").HandlerFunc(postTransport)
+	context.Methods("GET").Path("/map").HandlerFunc(getMapView)
+	context.Path("/websocket").HandlerFunc(websocketConnection)
 	return router, nil
 }

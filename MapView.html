@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <meta charset="utf-8"/>
+    <title>Geolocation Example</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 425px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="websocketStatus">Connected to Server</div>
+    <script>
+      var rakutenLocation = {lat: 49.8897949, lng: 10.9206611};
+      var timer = window.setTimeout(createMarkers, 3000);
+      loadMarkers();
+      var map
+      var markers = []
+
+      function createMarkers(){
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].marker = createMarker(markers[i].title, markers[i].latlng, map);
+        }
+        websocketStart();
+      }
+
+      function createMarker(markerTitle, latlng, map) {
+        var markerInstance = new google.maps.Marker({
+          position: new google.maps.LatLng(latlng.lat, latlng.lng),
+          map: map,
+          title: markerTitle
+        });
+        return markerInstance;
+      }
+
+      async function loadMarkers(){
+        const response = await fetch('http://localhost:8080/geolocation/v1/transport');
+        const transports = await response.json(); 
+        for (var i = 0; i < transports.length; i++) {
+          markers.push({title: transports[i].id, marker: null, latlng: {lat: transports[i].currentPosition.lat, lng: transports[i].currentPosition.lng}})
+        }
+      }
+
+      function getMarkerByTitle(title) {
+        var i;
+        for (i = 0; i < markers.length; i++) {
+          if (markers[i].title == title) {
+            return markers[i].marker
+          }
+        }
+        return "NOT_FOUND" 
+      }
+
+      function changeMarkerPosition(marker, newPosition) {
+          var latlng = new google.maps.LatLng(newPosition.lat, newPosition.lng);
+          marker.setPosition(latlng);
+      }
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 18,
+          center: rakutenLocation
+        });
+      }
+
+      function updateMarkerPosition(title, latlng) {
+        var markerToReposition = getMarkerByTitle(title);
+        if (markerToReposition == "NOT_FOUND") {
+          markerToReposition = createMarker(title, latlng, map);
+          markers.push({title: title, marker: markerToReposition, latlng: latlng});
+        } else {
+          changeMarkerPosition(markerToReposition, latlng);
+        }
+      }
+
+      function websocketStart() {
+        var ws = new WebSocket("ws://localhost:8080/geolocation/v1/websocket");
+        websocketStatus.innerText = "Connected to Server";
+
+        ws.onmessage = function (evt)
+        {
+          var titleAndPosition = JSON.parse(evt.data);
+          updateMarkerPosition(titleAndPosition.title, titleAndPosition.position);
+        };
+
+        ws.onclose = function()
+        {
+          var websocketStatus = document.getElementById("websocketStatus");
+          websocketStatus.innerText = "Server Connection closed";
+          setTimeout(function(){websocketStart()}, 5000);
+        };
+
+      }
+
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa--HXcOQyDXqJ1d86QwI0EO8xiV-dzbQ&callback=initMap">
+    </script>
+  </body>
+</html>

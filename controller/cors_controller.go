@@ -9,8 +9,9 @@ import (
 
 // setPreflightHeadersAndStatus add the required preflight headers on OPTIONS requests
 func setPreflightHeadersAndStatus(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "authorization,content-type,refresh_token")
-	w.Header().Set("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,FETCH")
 	w.Header().Set("Vary", "Access-Control-Request-Headers")
 	w.WriteHeader(http.StatusNoContent)
 }
