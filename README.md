@@ -3,6 +3,7 @@ Geolocation Example
 
 # Azure dependencies
 dep ensure -add github.com/Azure/azure-event-hubs-go
+
 dep ensure -add github.com/Azure/azure-amqp-common-go
 
 # Required environment variables
