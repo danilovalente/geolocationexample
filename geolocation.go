@@ -6,6 +6,7 @@ import (
 
 	"github.com/danilovalente/geolocationexample/config"
 	"github.com/danilovalente/geolocationexample/controller"
+	_ "github.com/danilovalente/geolocationexample/gateway/mongodb"
 )
 
 func main() {

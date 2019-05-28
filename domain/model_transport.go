@@ -12,20 +12,7 @@ package domain
 
 import (
 	"time"
-
-	"github.com/danilovalente/geolocationexample/repository"
 )
-
-/*
-TransportRepository defines the repository capabilities that should be found in a Repository implementation for Transport
-*/
-type TransportRepository interface {
-	repository.Repository
-	Get(id string) (*Transport, error)
-	GetAll() ([]*Transport, error)
-	Save(transport *Transport) (string, error)
-	UpdatePosition(transportID string, newPosition *Position) (*Transport, error)
-}
 
 //Transport represents a Transport object
 type Transport struct {
